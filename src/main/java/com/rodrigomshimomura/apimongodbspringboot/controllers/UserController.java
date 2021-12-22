@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping
 	public ResponseEntity<List<UserDTO>> findAll() {
 
 		List<User> list = userService.findAll();
@@ -35,7 +36,7 @@ public class UserController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	@RequestMapping(value = "/{id}")
 	public ResponseEntity<UserDTO> findById(@PathVariable String id) {
 
 		User obj = userService.findById(id);
@@ -44,7 +45,7 @@ public class UserController {
 
 	}
 	
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto) {
 
 		User obj = userService.fromDTO(objDto);
@@ -55,6 +56,15 @@ public class UserController {
 		//This command above returns the URL to the new inserted user on the headers
 		
 		return ResponseEntity.created(uri).build(); //Created returns the code 201 saying that everything went ok
+
+	}
+	
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable String id) {
+
+		userService.delete(id);
+
+		return ResponseEntity.noContent().build();
 
 	}
 
